@@ -1,0 +1,105 @@
+{% load static %}
+{% load json_script %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiza Obrazu</title>
+    {% block head_css %}
+    <link href="{% static 'css/image_analysis.css' %}" rel="stylesheet">
+    {% endblock head_css %}
+
+</head>
+<body>
+    <div class="top-bar">
+        <button type="button" onclick=window.location.href="{% url 'home' %}">
+            Powrót do listy pacjentów
+        </button>
+        <h1>ANALIZA OBRAZU <span class="sub-info">{{ image.eye }}/{{ image.date_taken|date:"d.m.Y" }}</span></h1>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button>Wyloguj</button>
+        </form>
+    </div>
+    <button class="accordion">DANE PACJENTA</button>
+    <div class="panel">
+        <div class="panel-content">
+            <p><b>Imię:</b> {{ patient.first_name }}</p>
+            <p><b>Nazwisko:</b> {{ patient.last_name }}</p>
+            <p><b>Data urodzenia:</b> {{ patient.date_of_birth|date:"d.m.Y" }}</p>
+            <p><b>Wiek:</b> {{ age }}</p>
+            <p><b>Płeć:</b> {{ patient.gender }}</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <label>Brightness: <input type="range" id="brightness-slider" min="-100" max="100" value="0"></label>
+            <br><br>
+            <label>Contrast: <input type="range" id="contrast-slider" min="-100" max="100" value="0"></label>
+            <br><br>
+            <button class="red-channel" onclick="splitChannel('red')">Red Channel</button>
+            <button class="green-channel" onclick="splitChannel('green')">Green Channel</button>
+            <button id="remove-channel-button">Remove Channel</button>
+            <button onclick="reset()">Reset</button>
+            <br>
+            <label class="checkbox-container">
+                <span class="tooltip" data-tooltip="Dodaj do uwag">
+                    <input type="checkbox" id="cdr-checkbox">
+                </span>
+                <button id="enable-dots-button" class="tooltip" data-tooltip="Cup-to-Disc Ratio
+                                                                                    Zaznacz punktami wgłębienie (cup) oraz dysk
+                                                                                    kolejność nie jest ważna
+                                                                                    Esc - usuń linię/wyjdź z trybu zaznaczania
+                                                                                    Naciśnij ponownie, żeby zresetować wynik">
+                    CDR
+                  </button>
+            </label>
+              
+            <label class="checkbox-container">
+                <span class="tooltip" data-tooltip="Dodaj do uwag">
+                    <input type="checkbox" id="auto-cdr-checkbox">
+                </span>
+                <button id="auto-cdr-button" class="tooltip" data-tooltip=" Automatic Cup-to-Disc Ratio">AutoCDR</button>
+                <span id="cdr-result"></span>
+            </label>
+            <button id="auto-segmentation-button">AutoSegmentation</button>
+            <div id="seg-modal" class="modal">
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <h3>AutoSegmentation</h3>
+                  <img id="auto-seg-img" src="" alt="Segmentation Result" style="max-width:100%;">
+                </div>
+              </div>
+        </div>
+        <div id="image-container" data-image-id="{{ image.id }}" class="image-container" style="display: block;" data-image-url="{{ image.image.url }}">
+            <canvas id="image-canvas"></canvas>
+           
+            
+        </div>
+        <div class="info-panel">
+            <div class="info-field">
+                <label for="uwagi">UWAGI:</label>
+                <textarea id="uwagi" placeholder="Wpisz komentarz"></textarea>
+            </div>
+            <div class="info-field">
+                <label for="diagnoza">Wyniki:</label>
+                <textarea id="diagnoza" placeholder="Wpisz wynik"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button>Zapisz</button> 
+    </div>
+
+    {% if analysis_data %}
+    <script id="savedAnalysis" type="application/json">
+        {{ analysis_data|json_script }}
+    </script>
+    {% endif %}
+
+    {% block foot_js %}
+    <script src="{% static 'js/image_analysis.js' %}?v=0.15"></script>
+    {% endblock foot_js %}
+</body>
+</html>

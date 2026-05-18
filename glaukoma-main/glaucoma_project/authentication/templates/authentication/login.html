@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Doctor Login{% endblock title %}
+
+{% block head_css %}
+<link href="{% static 'css/login.css' %}" rel="stylesheet">
+{% endblock head_css %}
+
+{% block head_js %}
+<script src="{% static 'js/login.js' %}"></script>
+{% endblock head_js %}
+
+{% block content-container %}login-container{% endblock content-container %}
+
+{% block content %}
+<h1>Doctor Login</h1>
+<form method="post" id="login-form">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Login</button>
+</form>
+{% endblock content%}
+
+{% block foot_js %}{% endblock foot_js %}

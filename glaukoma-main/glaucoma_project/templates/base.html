@@ -1,0 +1,40 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Glaucoma - {% block title %}{% endblock title %}</title>
+    
+    {% block head_meta %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock head_meta %}
+    
+    <link  rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    {% block head_css %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    {% endblock head_css %}
+
+    {% block head_js %}{% endblock head_js %}
+    
+</head>
+
+<body>
+    <div class="{% block content-container %} container {% endblock content-container %}">
+        {% block content %}
+        <div  class="row justify-content-center">
+            <div  class="col-4">
+                <h1 class="text-center">Glaukoma App</h1>
+            </div>
+        </div>
+        {% endblock content %}
+    </div>
+
+    {% block foot_js %}
+    <script src="{% static 'js/home.js' %}"></script>
+    {% endblock foot_js %}
+</body>
+
+</html>
